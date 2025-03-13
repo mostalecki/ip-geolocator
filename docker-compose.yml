@@ -1,0 +1,29 @@
+services:
+  ip-geolocator:
+    env_file:
+      - "config/dev/config.env"
+    build:
+      dockerfile: ./Dockerfile
+    container_name: ip-geolocator
+    volumes:
+      - ./src:/home/app/src
+      - ./migrations:/home/app/migrations
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db
+  db:
+    env_file:
+      - "config/dev/config.env"
+    image: postgres:13-alpine
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+    ports:
+      - 5432:5432
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=ipgeolocator
+volumes:
+  postgres_data:
+
