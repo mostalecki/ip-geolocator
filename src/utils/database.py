@@ -1,13 +1,9 @@
-from sqlmodel import create_engine, SQLModel, Session
+from sqlmodel import create_engine, Session
 
 from src.config import config
 
 
 engine = create_engine(config.DATABASE_URL, echo=True)
-
-
-def init_db():
-    SQLModel.metadata.create_all(engine)
 
 
 def get_session():
