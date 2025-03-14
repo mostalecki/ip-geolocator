@@ -7,8 +7,6 @@ from src.config import config
 from src.error_handler.handler import ErrorHandler
 from src.geolocation.routes import router as geolocation_router
 
-from src.utils.database import init_db
-
 
 class IpGeolocationAPI(FastAPI):
     def __init__(self, *args, **kwargs) -> None:
@@ -19,11 +17,6 @@ class IpGeolocationAPI(FastAPI):
 
 
 app = IpGeolocationAPI()
-
-
-@app.on_event("startup")
-def on_startup():
-    init_db()
 
 
 if __name__ == "__main__":
