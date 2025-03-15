@@ -24,7 +24,7 @@ class NotFoundError(BaseAppException):
 class CancellationError(BaseAppException):
     status_code = 400
 
-    def __init__(self, pk: str = None):
+    def __init__(self, pk: int | None = None):
         self.detail = f"Cancellation failed: id {pk} not found"
         super().__init__(self.status_code, self.detail)
 

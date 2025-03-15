@@ -1,4 +1,3 @@
-from sqlalchemy import Sequence
 from sqlalchemy.exc import NoResultFound
 from sqlmodel import Session, select
 
@@ -11,34 +10,58 @@ from src.geolocation.service import GeolocationService
 
 
 class GeolocationManager:
-    async def get_or_create_geolocation(self, session: Session, request_payload: IpGeolocationRequest) -> Geolocation:
+    def __init__(self, session: Session):
+        self.session = session
+
+    async def get_or_create_geolocation(self, request_payload: IpGeolocationRequest) -> Geolocation:
         if request_payload.ip_address:
             query = select(Geolocation).where(Geolocation.ip == str(request_payload.ip_address))
-            if geolocation := session.exec(query).first():
+            if geolocation := self.session.exec(query).first():
                 return geolocation
 
         geolocation = await GeolocationService.request_geolocation_data(request_payload)
-        session.add(geolocation)
-        session.commit()
-        session.refresh(geolocation)
+        self.session.add(geolocation)
+        self.session.commit()
+        self.session.refresh(geolocation)
 
         return geolocation
 
-    async def get_geolocation_list(self, session: Session) -> Sequence[Geolocation]:
-        return session.exec(select(Geolocation)).all()
+    async def get_geolocation_list(self) -> list[Geolocation]:
+        """Returns the list of all geolocation objects."""
+        return list(self.session.exec(select(Geolocation)).all())
 
-    async def get_geolocation(self, session: Session, pk: int) -> Geolocation:
-        query = select(Geolocation).where(Geolocation.id == pk)
+    async def get_geolocation(self, pk: int) -> Geolocation:
+        """
+        Get geolocation by id.
+
+        Raises:
+            NotFoundError: When geolocation with given id does not exist.
+        """
         try:
-            return session.exec(query).one()
+            return await self._get_geolocation_by_id(pk)
         except NoResultFound:
             raise NotFoundError
 
-    async def delete_geolocation(self, session: Session, pk: int) -> None:
-        query = select(Geolocation).where(Geolocation.id == pk)
-        result = session.exec(query)
+    async def delete_geolocation(self, pk: int) -> None:
+        """
+        Delete geolocation by id.
+
+        Raises:
+            CancellationError: When geolocation with given id does not exist.
+        """
+        geolocation = await self._get_geolocation_by_id(pk)
         try:
-            session.delete(result.one())
-            session.commit()
+            self.session.delete(geolocation)
+            self.session.commit()
         except NoResultFound:
             raise CancellationError(pk)
+
+    async def _get_geolocation_by_id(self, pk: int) -> Geolocation:
+        """
+        Selects geolocation from database by id.
+
+        Raises:
+            sqlalchemy.exc.NoResultFound: When geolocation with given id does not exist.
+        """
+        query = select(Geolocation).where(Geolocation.id == pk)
+        return self.session.exec(query).one()
