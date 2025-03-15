@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from pydantic import IPvAnyAddress, AnyUrl, model_validator
 from pydantic.alias_generators import to_camel
 from sqlmodel import SQLModel, Field
@@ -38,3 +40,5 @@ class Geolocation(BaseModel, table=True):
     zip: str
     latitude: str
     longitude: str
+    created_at: datetime | None = None
+    url: str | None = None

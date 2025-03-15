@@ -1,3 +1,5 @@
+import datetime
+
 from sqlalchemy.exc import NoResultFound
 from sqlmodel import Session, select
 
@@ -13,13 +15,11 @@ class GeolocationManager:
     def __init__(self, session: Session):
         self.session = session
 
-    async def get_or_create_geolocation(self, request_payload: IpGeolocationRequest) -> Geolocation:
-        if request_payload.ip_address:
-            query = select(Geolocation).where(Geolocation.ip == str(request_payload.ip_address))
-            if geolocation := self.session.exec(query).first():
-                return geolocation
-
+    async def create_geolocation(self, request_payload: IpGeolocationRequest) -> Geolocation:
+        """Get geolocation data for given ip or url and save it into database."""
         geolocation = await GeolocationService.request_geolocation_data(request_payload)
+        geolocation.created_at = datetime.datetime.now(datetime.UTC)
+        geolocation.url = str(request_payload.url)
         self.session.add(geolocation)
         self.session.commit()
         self.session.refresh(geolocation)
@@ -49,12 +49,13 @@ class GeolocationManager:
         Raises:
             CancellationError: When geolocation with given id does not exist.
         """
-        geolocation = await self._get_geolocation_by_id(pk)
         try:
-            self.session.delete(geolocation)
-            self.session.commit()
+            geolocation = await self._get_geolocation_by_id(pk)
         except NoResultFound:
             raise CancellationError(pk)
+
+        self.session.delete(geolocation)
+        self.session.commit()
 
     async def _get_geolocation_by_id(self, pk: int) -> Geolocation:
         """
