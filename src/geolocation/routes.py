@@ -10,21 +10,21 @@ router = APIRouter()
 
 @router.post("/geolocation", status_code=status.HTTP_201_CREATED)
 async def create_geolocation(payload: IpGeolocationRequest, session: Session = Depends(get_session)) -> Geolocation:
-    return await GeolocationManager().get_or_create_geolocation(session, payload)
+    return await GeolocationManager(session).get_or_create_geolocation(payload)
 
 
 @router.get("/geolocation")
 async def get_geolocation_list(
     session: Session = Depends(get_session),
 ) -> list[Geolocation]:
-    return await GeolocationManager().get_geolocation_list(session)
+    return await GeolocationManager(session).get_geolocation_list()
 
 
 @router.get("/geolocation/{pk}")
 async def get_geolocation_detail(pk: int, session: Session = Depends(get_session)) -> Geolocation:
-    return await GeolocationManager().get_geolocation(session, pk)
+    return await GeolocationManager(session).get_geolocation(pk)
 
 
 @router.delete("/geolocation/{pk}", status_code=status.HTTP_204_NO_CONTENT)
 async def delete_geolocation(pk: int, session: Session = Depends(get_session)) -> None:
-    return await GeolocationManager().delete_geolocation(session, pk)
+    return await GeolocationManager(session).delete_geolocation(pk)
