@@ -10,7 +10,7 @@ router = APIRouter()
 
 @router.post("/geolocation", status_code=status.HTTP_201_CREATED)
 async def create_geolocation(payload: IpGeolocationRequest, session: Session = Depends(get_session)) -> Geolocation:
-    return await GeolocationManager(session).get_or_create_geolocation(payload)
+    return await GeolocationManager(session).create_geolocation(payload)
 
 
 @router.get("/geolocation")
