@@ -1,0 +1,35 @@
+{
+    "ip": "151.101.65.140",
+    "type": "ipv4",
+    "continent_code": "NA",
+    "continent_name": "North America",
+    "country_code": "US",
+    "country_name": "United States",
+    "region_code": "CA",
+    "region_name": "California",
+    "city": "San Francisco",
+    "zip": "94117",
+    "latitude": 37.769168853759766,
+    "longitude": -122.44249725341797,
+    "msa": "41860",
+    "dma": "807",
+    "radius": null,
+    "ip_routing_type": "fixed",
+    "connection_type": "tx",
+    "location": {
+        "geoname_id": 5391959,
+        "capital": "Washington D.C.",
+        "languages": [
+            {
+                "code": "en",
+                "name": "English",
+                "native": "English"
+            }
+        ],
+        "country_flag": "https://assets.ipstack.com/flags/us.svg",
+        "country_flag_emoji": "🇺🇸",
+        "country_flag_emoji_unicode": "U+1F1FA U+1F1F8",
+        "calling_code": "1",
+        "is_eu": false
+    }
+}

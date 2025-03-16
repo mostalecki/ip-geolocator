@@ -5,7 +5,7 @@ from sqlmodel import Session, select
 
 from src.error_handler.exceptions import (
     NotFoundError,
-    CancellationError,
+    DeletionError,
 )
 from src.geolocation.models import IpGeolocationRequest, Geolocation
 from src.geolocation.service import GeolocationService
@@ -52,7 +52,7 @@ class GeolocationManager:
         try:
             geolocation = await self._get_geolocation_by_id(pk)
         except NoResultFound:
-            raise CancellationError(pk)
+            raise DeletionError(pk)
 
         self.session.delete(geolocation)
         self.session.commit()
