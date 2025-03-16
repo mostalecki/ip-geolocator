@@ -17,7 +17,7 @@ class GeolocationManager:
 
     async def create_geolocation(self, request_payload: IpGeolocationRequest) -> Geolocation:
         """Get geolocation data for given ip or url and save it into database."""
-        geolocation = await GeolocationService.request_geolocation_data(request_payload)
+        geolocation = await GeolocationService().request_geolocation_data(request_payload)
         geolocation.created_at = datetime.datetime.now(datetime.UTC)
         geolocation.url = str(request_payload.url)
         self.session.add(geolocation)
