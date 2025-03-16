@@ -27,9 +27,21 @@ build-backend = "poetry.core.masonry.api"
 [tool.poetry.group.dev.dependencies]
 pytest = "^8.3.5"
 ruff = "^0.9.10"
+pytest-cov = "^6.0.0"
+factory-boy = "^3.3.3"
+freezegun = "^1.5.1"
+pytest-asyncio = "^0.25.3"
+pytest-mock = "^3.14.0"
+pytest-httpx = "^0.35.0"
 
 [tool.ruff]
 line-length = 120
 target-version = "py310"
 exclude = ["migrations", "env"]
 
+[tool.pytest.ini.options]
+python_files = ["test_*.py"]
+asyncio_mode = "auto"
+
+[tool.coverage.run]
+omit = ["tests/*"]
