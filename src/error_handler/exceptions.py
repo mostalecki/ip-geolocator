@@ -17,12 +17,12 @@ class BaseAppException(HTTPException):
 
 
 class NotFoundError(BaseAppException):
-    status_code = 404
+    status_code = status.HTTP_404_NOT_FOUND
     detail = "Not Found"
 
 
 class DeletionError(BaseAppException):
-    status_code = 400
+    status_code = status.HTTP_400_BAD_REQUEST
 
     def __init__(self, pk: int | None = None):
         self.detail = f"Deletion failed: id {pk} not found"
@@ -30,5 +30,20 @@ class DeletionError(BaseAppException):
 
 
 class InvalidGeolocationError(BaseAppException):
-    status_code = 400
+    status_code = status.HTTP_400_BAD_REQUEST
     detail = "Error occurred while fetching geolocation."
+
+
+class IpStackAuthorizationError(BaseAppException):
+    status_code = status.HTTP_400_BAD_REQUEST
+    detail = "Error occurred while connecting to geolocation services. Please contact the administrator."
+
+
+class UsageLimitReachedError(BaseAppException):
+    status_code = status.HTTP_429_TOO_MANY_REQUESTS
+    detail = "The maximum allowed amount of monthly geolocation API requests has been reached. Please try again later."
+
+
+class UserNotActiveError(BaseAppException):
+    status_code = status.HTTP_400_BAD_REQUEST
+    detail = "Error occurred while connecting to geolocation services. Please contact the administrator."

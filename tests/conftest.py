@@ -3,7 +3,7 @@ import json
 import pytest
 from sqlmodel import Session, SQLModel, create_engine
 from sqlmodel.pool import StaticPool
-from starlette.testclient import TestClient
+from fastapi.testclient import TestClient
 
 from src.geolocation.models import IpGeolocationRequest
 from src.utils.database import get_session
@@ -44,7 +44,7 @@ def geolocation_data():
 
 
 @pytest.fixture()
-def ipstack_response_payload_success():
+def ipstack_response_success():
     with get_test_file_data("test_data/ipstack_response_success.json") as fh:
         yield json.loads(fh.read())
 
