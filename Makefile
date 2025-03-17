@@ -1,5 +1,3 @@
-.PHONY: build run
-
 build:
 	docker compose build
 
@@ -8,3 +6,15 @@ run:
 
 lint:
 	ruff format . && ruff check --fix .
+
+bash:
+    docker compose exec -ti ip-geolocator bash
+
+makemigrations:
+    docker compose exec ip-geolocator alembic revision --autogenerate
+
+migrate:
+    docker compose exec ip-geolocator alembic upgrade head
+
+test:
+    pytest --cov .
