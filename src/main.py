@@ -18,7 +18,10 @@ class IpGeolocationAPI(FastAPI):
         self.add_exception_handler(DatabaseError, ErrorHandler.handle_database_exception)
 
 
-app = IpGeolocationAPI()
+app = IpGeolocationAPI(
+    title="IP Geolocation API",
+    version="0.0.1",
+)
 
 
 if __name__ == "__main__":
